@@ -1,14 +1,15 @@
-var request = require('request');
-var config = require('./config').config;
+var request = require('request')
+var config = require('./config').config
 
-fetchFolloweeBase = function(hash, count) {
+exports.fetchFolloweeBase = function(hash, count) {
+
 	return new Promise((resolve, reject) => {
 		request({
 			method: 'POST',
 			url: 'https://www.zhihu.com/node/ProfileFolloweesListV2',
 			form: {
 				method: "next",
-				params: `{"offset":20,"order_by":"created","hash_id":"48c15addf6c26b487b6740f48add9d58"}`,
+				params: `{"offset":${count},"order_by":"created","hash_id":"${hash}"}`,
 				_xsrf: config._xsrf
 			},
 			headers: {
@@ -18,7 +19,7 @@ fetchFolloweeBase = function(hash, count) {
 				'x-requested-with': 'XMLHttpRequest'
 			},
 			timeout: 1500
-		}, function (error, response, body) {
+		}, (error, response, body) => {
 			if (error){
 				reject(error)
 			} else if (response.statusCode == 200) {
