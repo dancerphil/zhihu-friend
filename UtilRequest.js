@@ -1,3 +1,4 @@
+// https://github.com/starkwang
 var request = require('request')
 var config = require('./config').config
 
@@ -23,10 +24,24 @@ exports.fetchFolloweeBase = function(hash, count) {
 			if (error){
 				reject(error)
 			} else if (response.statusCode == 200) {
-				resolve(JSON.parse(body).msg)
+				resolve(JSON.parse(body).msg.map(regHandler))
 			} else {
 				reject(response.statusCode)
 			}
 		})
 	})
+}
+
+function regHandler(str) {
+	var result = {}
+	var reHash = /data-id=\"(\S*)\"/g
+	var reName = /<h2 class=\"zm-list-content-title\">.*>(.*)<\/a><\/h2>/g
+	var reID = /href=\"https:\/\/www\.zhihu\.com\/people\/(\S*)\"/g
+	reHash.exec(str)
+	result.hash = RegExp.$1
+	reName.exec(str)
+	result.name = RegExp.$1
+	reID.exec(str)
+	result.id = RegExp.$1
+	return result
 }
