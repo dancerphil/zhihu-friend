@@ -23,10 +23,15 @@ exports.fetchFolloweeBase = function(user, count) {
 		}, (error, response, body) => {
 			if (error){
 				reject(error)
-			} else if (response.statusCode == 200) {
-				resolve(JSON.parse(body).msg.map(regHandler))
-			} else {
+			} else if (response.statusCode !== 200) {
 				reject(response.statusCode)
+			} else {
+				var followeeArray = JSON.parse(body).msg.map(regHandler)
+				if(followeeArray.length){
+					resolve(followeeArray)
+				} else {
+					reject(followeeArray)
+				}
 			}
 		})
 	})
