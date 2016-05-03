@@ -2,7 +2,7 @@
 var request = require('request')
 var config = require('./config').config
 
-exports.fetchFolloweeBase = function(hash, count) {
+exports.fetchFolloweeBase = function(user, count) {
 
 	return new Promise((resolve, reject) => {
 		request({
@@ -10,7 +10,7 @@ exports.fetchFolloweeBase = function(hash, count) {
 			url: 'https://www.zhihu.com/node/ProfileFolloweesListV2',
 			form: {
 				method: "next",
-				params: `{"offset":${count},"order_by":"created","hash_id":"${hash}"}`,
+				params: `{"offset":${count},"order_by":"created","hash_id":"${user.hash}"}`,
 				_xsrf: config._xsrf
 			},
 			headers: {
