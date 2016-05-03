@@ -31,9 +31,16 @@ var insertFolloweeArray = require('./UtilWrite').insertFolloweeArray
 
 var fetchList = []
 for(var i = 0; i < 100; i+=20){
-	fetchList.push(fetchFolloweeBase(user, i))
+	fetchList.push(fetchFolloweeBase(user, i)
+		.then((value)=>{
+			return insertFolloweeArray(user, value)
+		}))
 }
 Promise.all(fetchList).then((values) => {
-	console.log(values)
+	// console.log(values)
 	require('fs').writeFile('test.txt',JSON.stringify(values))
-})
+}).catch(function(reason) {
+		console.log('--------failed--------')
+		console.log(reason)
+		console.log('----------------------')
+	});

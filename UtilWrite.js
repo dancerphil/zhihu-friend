@@ -9,10 +9,15 @@ userDB.loadDatabase();
 
 exports.insertFolloweeArray = function(first, arr) {
 	return new Promise((resolve, reject) => {
+		var insertList = []
 		arr.forEach((second) => {
-			insertFollowee(first.id, second.id)
+			insertList.push(insertFollowee(first.id, second.id))
 		})
-		resolve(3)
+		Promise.all(insertList).then((values) => {
+			resolve(values)
+		}).catch((reason) => {
+			reject(reason)
+		})
 		// TODO: for() { maybe promise.map or promise,all
 		// insertFollowee(firstID, arr[],getID)
 
@@ -21,8 +26,17 @@ exports.insertFolloweeArray = function(first, arr) {
 
 insertFollowee = function(firstID, secondID) {
 	return new Promise((resolve, reject) => {
-		console.log(firstID, secondID)
-
+		var link = {
+			firstID,
+			secondID
+		}
+		followeeDB.insert(link, (err, value) => {
+			if(err){
+				reject(err)
+			} else {
+				resolve(value)
+			}
+		})
 	})
 }
 
