@@ -11,6 +11,3 @@ test*
 
 # 隐私信息
 config.js
-
-# 暂时不传db
-.db
