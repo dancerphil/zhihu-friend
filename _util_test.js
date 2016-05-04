@@ -28,17 +28,21 @@ var insertFolloweeArray = require('./UtilWrite').insertFolloweeArray
 // 		console.log(reason)
 // 		console.log('----------------------')
 // 	});
-
-var fetchList = []
-for(var i = 0; i < 100; i+=20){
-	fetchList.push(fetchFolloweeBase(user, i)
-		.then((value)=>{
-			return insertFolloweeArray(user, value)
-		}))
-}
-Promise.all(fetchList).then((values) => {
-	// console.log(values)
-	require('fs').writeFile('test.txt',JSON.stringify(values))
+Promise.resolve('a').then((value) => {
+	var fetchList = []
+	for(var i = 0; i < 100; i+=20){
+		fetchList.push(fetchFolloweeBase(user, i)
+			.then((value)=>{
+				return insertFolloweeArray(user, value)
+			}))
+	}
+	var returnList = []
+	returnList.push(Promise.resolve(value + '\n'))
+	returnList.push(Promise.all(fetchList))
+	return Promise.all(returnList)
+	//return Promise.all(fetchList)
+}).then(([initData, value]) => {
+	require('fs').writeFile('test.txt',initData + JSON.stringify(value))
 }).catch(function(reason) {
 		console.log('--------failed--------')
 		console.log(reason)
