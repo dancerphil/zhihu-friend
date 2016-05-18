@@ -44,7 +44,7 @@ function regHandler(str) {
 	var reID = /href=\"https:\/\/www\.zhihu\.com\/people\/(\S*)\"/g
 	reHash.exec(str)
 	result.hash = RegExp.$1
-	reName.exec(str)
+	reName.exec(str)// here is a bug
 	result.name = RegExp.$1
 	reID.exec(str)
 	result.id = RegExp.$1

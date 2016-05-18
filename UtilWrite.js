@@ -6,6 +6,17 @@ followeeDB.loadDatabase();
 friendDB.loadDatabase();
 userDB.loadDatabase();
 
+exports.clearFollowee = function (first) {
+	return new Promise((resolve, reject) => {
+		followeeDB.remove({ firstID: first.id }, { multi: true }, function (err, numRemoved) {
+			if (err) {
+				reject(err)
+			} else {
+				resolve(numRemoved)
+			}
+		});
+	})
+}
 
 exports.insertFolloweeArray = function(first, arr) {
 	return new Promise((resolve, reject) => {
@@ -34,7 +45,8 @@ insertFollowee = function(firstID, secondID) {
 			if(err){
 				reject(err)
 			} else {
-				resolve(value)
+				// link 加入数据库，然后只返回关注者
+				resolve(value.secondID)
 			}
 		})
 	})

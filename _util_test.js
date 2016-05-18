@@ -1,6 +1,7 @@
-var fetchFolloweeBase = require('./UtilRequest').fetchFolloweeBase
+var UtilRequest = require('./UtilRequest')
 var user = require('./config').user
-var insertFolloweeArray = require('./UtilWrite').insertFolloweeArray
+var UtilWrite = require('./UtilWrite')
+const _ = require('underscore')
 
 // fetchFolloweeBase(user, 20)
 // 	.then((value)=>{
@@ -28,21 +29,26 @@ var insertFolloweeArray = require('./UtilWrite').insertFolloweeArray
 // 		console.log(reason)
 // 		console.log('----------------------')
 // 	});
-Promise.resolve('a').then((value) => {
+UtilWrite.clearFollowee(user).then((numRemoved) => {
+	console.log('clear: '+numRemoved)
 	var fetchList = []
 	for(var i = 0; i < 100; i+=20){
-		fetchList.push(fetchFolloweeBase(user, i)
+		fetchList.push(UtilRequest.fetchFolloweeBase(user, i)
 			.then((value)=>{
-				return insertFolloweeArray(user, value)
+				return UtilWrite.insertFolloweeArray(user, value)
 			}))
 	}
-	var returnList = []
-	returnList.push(Promise.resolve(value + '\n'))
-	returnList.push(Promise.all(fetchList))
-	return Promise.all(returnList)
-	//return Promise.all(fetchList)
-}).then(([initData, value]) => {
-	require('fs').writeFile('test.txt',initData + JSON.stringify(value))
+	return Promise.all(fetchList)
+
+	// var returnList = []
+	// returnList.push(Promise.resolve(value + '\n'))
+	// returnList.push(Promise.all(fetchList))
+	// return Promise.all(returnList)
+}).then((value) => {
+// }).then(([initData, value]) => {
+	value = _.flatten(value)
+	require('fs').writeFile('test.txt', JSON.stringify(value))
+	// require('fs').writeFile('test.txt',initData + JSON.stringify(value))
 }).catch(function(reason) {
 		console.log('--------failed--------')
 		console.log(reason)
