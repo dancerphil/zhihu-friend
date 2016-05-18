@@ -26,6 +26,7 @@ exports.fetchFolloweeBase = function(user, count) {
 			} else if (response.statusCode !== 200) {
 				reject(response.statusCode)
 			} else {
+				// var followeeArray = JSON.parse(body).msg
 				var followeeArray = JSON.parse(body).msg.map(regHandler)
 				if(followeeArray.length){
 					resolve(followeeArray)
@@ -40,11 +41,11 @@ exports.fetchFolloweeBase = function(user, count) {
 function regHandler(str) {
 	var result = {}
 	var reHash = /data-id=\"(\S*)\"/g
-	var reName = /<h2 class=\"zm-list-content-title\">.*>(.*)<\/a><\/h2>/g
+	var reName = />(.*)<\/a><\/h2>/g
 	var reID = /href=\"https:\/\/www\.zhihu\.com\/people\/(\S*)\"/g
 	reHash.exec(str)
 	result.hash = RegExp.$1
-	reName.exec(str)// here is a bug
+	reName.exec(str)
 	result.name = RegExp.$1
 	reID.exec(str)
 	result.id = RegExp.$1
